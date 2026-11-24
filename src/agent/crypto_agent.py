@@ -82,9 +82,12 @@ class CryptoAgent:
         self._init_model()
         
     def _init_model(self) -> None:
-        self.model = MODEL_MAP[self.model_config["model_name"]](
-            self.model_config, self.system_prompt
-        )
+        if self.model_config.get("client") == "openrouter":
+            from src.model.openrouter import OpenRouterModel
+            model_cls = OpenRouterModel
+        else:
+            model_cls = MODEL_MAP[self.model_config["model_name"]]
+        self.model = model_cls(self.model_config, self.system_prompt)
         self.log(f"Initialized model: {self.model_config['model_name']}")
     
     def log(self, message: str) -> None:
@@ -115,8 +118,10 @@ class CryptoAgent:
         # If any tag is missing we short-circuit and instruct the model to
         # produce a properly formatted response on the next turn.
         # ------------------------------------------------------------------
-        mandatory_tags = ["### Reasoning", "### Action", "### Action Content"]
-        if not all(tag in response_content for tag in mandatory_tags):
+        # Relaxed vs. the original harness: a missing "### Reasoning" section is
+        # tolerated (the action is still executed); only the action itself is required.
+        has_action_line = re.search(r"^### Action\s*:?\s*$", response_content, re.IGNORECASE | re.MULTILINE)
+        if not has_action_line or "### Action Content" not in response_content:
             result["action_type"] = "format error"
             return result
         

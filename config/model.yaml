@@ -111,3 +111,9 @@ doubao-seed-1.6-thinking:
   thinking: 'enabled'
 
 
+
+nemotron-ultra:
+  client: "openrouter"
+  model_name: "nemotron-ultra"
+  deployment: "nvidia/nemotron-3-ultra-550b-a55b:free"
+  max_tokens: 8192

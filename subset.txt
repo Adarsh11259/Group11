@@ -1,0 +1,20 @@
+# --- named in the paper as failure cases ---
+data/CTF/04-RSA/33-reiwa-rot13
+data/CTF/05-DLP/05-xordlp-20
+data/CTF/05-DLP/01-prove-it
+# --- hard static lattice / DLP (all files given, no server needed) ---
+data/CTF/05-DLP/07-notitle
+data/CTF/06-Lattice/01-diamond-17
+data/CTF/06-Lattice/03-budget-bag
+data/CTF/06-Lattice/04-naptime
+data/CTF/06-Lattice/05-easyrsa
+data/CTF/06-Lattice/07-d3bdd
+data/CTF/06-Lattice/12-tesvir
+data/CTF/06-Lattice/15-MatProd
+data/CTF/06-Lattice/16-pacap
+data/CTF/06-Lattice/18-Random-Shuffling-Algorithm
+data/CTF/06-Lattice/22-membrane
+# --- easy sanity checks (a working setup should solve these) ---
+data/CTF/01-Classic/01-greek-cipher
+data/CTF/04-RSA/01-blue-hens-2023
+data/CTF/04-RSA/02-blue-hens-2023
