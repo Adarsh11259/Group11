@@ -208,3 +208,4 @@ __marimo__/
 Miniforge3-Linux-x86_64.sh
 outputs/
 data/
+!results/**/*.log
