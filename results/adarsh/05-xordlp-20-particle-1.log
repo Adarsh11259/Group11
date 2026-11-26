@@ -1,0 +1,244 @@
+System Prompt:
+
+You are an elite cryptographic specialist designed to dominate CTF cryptography challenges. You excel at identifying weaknesses, exploiting vulnerabilities, and leveraging mathematical insights to break cryptographic systems efficiently.
+
+## Core Expertise
+- Advanced cryptanalysis and mathematical problem-solving
+- Vulnerability identification in cryptographic implementations  
+- Strategic use of computational tools for maximum efficiency
+- Pattern recognition and algorithmic weakness exploitation
+
+## Available Tools
+**SageMath** (preferred for number theory, finite fields, large integers)
+**Python** (general programming and scripting)
+**Command Line** (system operations)
+
+**yafu** - Large integer factorization:
+```python
+import subprocess
+def factor_with_yafu(n):
+    command = f'echo "factor({n})" | yafu'
+    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    return result.stdout
+```
+
+**factordb** - Online factorization database:
+```python
+import requests
+def queryFactors(n):
+    s=[]
+    url="http://factordb.com/api?query="+str(n)
+    r = requests.get(url)
+    factors=r.json()['factors']
+    for f in factors:
+        for i in range(f[1]):
+            s.append(int(f[0]))
+    return s
+```
+
+**flatter** - Fast lattice reduction:
+```python
+from subprocess import check_output
+def flatter(M):
+    z = "[[" + "]\n[".join(" ".join(map(str, row)) for row in M) + "]]"
+    ret = check_output(["flatter"], input=z.encode())
+    return matrix(M.nrows(), M.ncols(), map(int, findall(b"-?\\d+", ret)))
+```
+
+## Strategy Guidalines
+- **Think like an attacker**: Look for mathematical shortcuts and implementation flaws first
+- **Efficiency over brute force**: Prioritize algorithmic weaknesses and clever exploits
+- **Tool selection**: Use SageMath for heavy math, Python for implementation, command line for file operations
+- **Pattern recognition**: Identify common CTF crypto patterns and known attack vectors
+- **Install missing modules**: Use `pip` or `sage -pip` when encountering import errors
+
+## Response Format
+Your response MUST contain exactly three sections, each introduced by its corresponding `### tag`:
+
+### Reasoning
+
+[Step-by-step analysis including mathematical insights, attack vectors, and chosen approach]
+
+### Action
+
+[ONE of: 'command', 'create file xxx', 'verification', or 'give up']
+- **command**: Execute a system command
+- **create file xxx**: Create file at {write_path}/{file_name} (e.g., ./output/solution.py)
+- **verification**: Compare {write_path}/flag.txt with the true flag
+- **give up**: Last resort when all methods exhausted
+- Use plain text only—do not include square brackets `[]`
+
+
+### Action Content
+
+Follow these rules precisely according to Action:
+1. **command** – Write exactly one shell command on a single line. No extra words before or after.
+2. **create file xxx** – Write only the full contents of the file. Start at the first character, end at the last. Do **not** wrap it in code fences, backticks, or add any commentary.
+3. **verification** – Leave the Action Content section completely blank.
+4. **give up** – Leave the Action Content section completely blank.
+
+If you add commentary, multiple commands, or any markdown formatting, your answer will be rejected.
+
+## Critical Rules
+1. **One action per response** - No multiple actions
+2. **Mathematical analysis first** - Always reason before computing
+3. **Use provided paths** - Never change working directories
+4. **Exhaust smart approaches** - Only give up after trying all reasonable methods
+5. **No additional text** after "### Action Content:"
+6. **Check file sizes** before viewing large files
+7. **Focus on CTF-specific vulnerabilities** and common attack patterns
+8. **Write scripts before executing** - If you need to run a program, first write the script to a file and then run it; avoid direct `python -c` execution.
+9. **Store obtained flag** - After solving the challenge, save the flag to `<write_path>/flag.txt`; verification is only valid if this file exists.
+10. **Mandatory structure** - Your reply must contain **exactly** the three sections `### Reasoning`, `### Action`, and `### Action Content` in this order.
+
+
+Initialized model: particle-1
+Session started: 2026-11-26 12:58:18
+Starting iteration 1/50
+User input: **CRYPTOGRAPHY CTF CHALLENGE**
+
+**Static Cryptanalysis Task**
+
+You have everything needed to break the challenge locally – source code (when supplied) and one or more ciphertext / output samples in the read-only `./public/` folder.
+
+**Goal**
+1. Discover an algorithmic or implementation weakness.
+2. Exploit it to obtain the secret flag.
+3. Write the flag to `flag.txt` in the write directory and request verification.
+
+
+**File Access**:
+- Read only: `./public/`
+- Write to: `./`
+
+## Helper Available: `helper.py`
+
+**Critical:** Use `helper.py` to load all large integers, complex data structures, and challenge parameters. This prevents copy-paste errors with large numbers. `helper.py` is located in your current working directory (same directory where you run commands).
+
+**Usage:**
+```python
+# Import all challenge data and helper functions
+from helper import *
+
+# All variables (n, e, c, primes, etc.) are now loaded
+# Use them directly in your cryptanalysis
+```
+
+**Why use this:** Large integers in CTF challenges can cause transcription errors. The helper file ensures accuracy. 
+
+**Critical:** 
+1. Never use `cd` commands - maintain current working directory for all operations.
+2. The flag format is flag{***}. Save the obtained flag to `./flag.txt` before verification.
+3. Prefer elegant algebraic or structural attacks to brute force.
+4. Before doing anything else, inspect the contents of `./public/` to understand the resources provided.
+
+Model response:
+I'll start by exploring the provided files to understand the challenge.
+
+### Reasoning
+
+Let me inspect the public folder and helper file to understand the challenge structure.
+
+### Action
+
+command
+
+### Action Content
+
+ls -la ./public/ && echo "---HELPER---" && cat helper.py
+Parsing model response
+Executing command: ls -la ./public/ && echo "---HELPER---" && cat helper.py
+Command completed successfully
+Starting iteration 2/50
+User input: Command output:
+
+total 84
+drwxr-xr-x 2 adarsh adarsh  4096 Nov 26 12:58 .
+drwxr-xr-x 3 adarsh adarsh  4096 Nov 26 12:58 ..
+-rwxr-xr-x 1 adarsh adarsh   163 Nov 23 16:44 ._helper.py
+-rwxr-xr-x 1 adarsh adarsh   163 Nov 23 16:44 ._main.py
+-rwxr-xr-x 1 adarsh adarsh   163 Nov 23 16:44 ._output.txt
+-rwxr-xr-x 1 adarsh adarsh   583 Nov 23 16:44 main.py
+-rwxr-xr-x 1 adarsh adarsh 60283 Nov 23 16:44 output.txt
+---HELPER---
+output = open('public/output.txt').read().split('\n')
+p = int(output[0].split('= ')[1])
+y = int(output[1].split('= ')[1])
+enc = bytes.fromhex(output[2].split('= ')[1])
+k, c = [], []
+for i in output[3:-1]:
+    k.append(int(i.split(' ')[0]))
+    c.append(int(i.split(' ')[1]))
+
+k = k
+
+c = c
+
+
+Continue with the next step based on the command output.
+Model response:
+### Reasoning
+
+Let me examine the source code and the output structure.
+
+### Action
+
+command
+
+### Action Content
+
+cat ./public/main.py && echo "---HEAD OUTPUT---" && head -c 2000 ./public/output.txt && echo "" && echo "---LINECOUNT---" && wc -l ./public/output.txt
+Parsing model response
+Executing command: cat ./public/main.py && echo "---HEAD OUTPUT---" && head -c 2000 ./public/output.txt && echo "" && echo "---LINECOUNT---" && wc -l ./public/output.txt
+Command completed successfully
+Starting iteration 3/50
+User input: Command output:
+
+from Crypto.Util.number import *
+import os, hashlib
+from secret import flag
+
+def getrandbits(nbits):
+    return bytes_to_long(os.urandom(nbits // 8))
+
+p = getPrime(512)
+while not isPrime(p//2):
+    p = getPrime(512)
+
+x = getrandbits(256)
+y = pow(9,x,p)
+enc = bytes([i^j for (i,j) in zip(flag, hashlib.sha384(long_to_bytes(x)).digest())])
+
+f = open("output.txt","w")
+
+f.write('p = ' + str(p) + '\n')
+f.write('y = ' + str(y) + '\n')
+f.write('enc = ' + enc.hex() + '\n')
+
+for i in range(256):
+    k = getrandbits(256)
+    c = pow(9,x^k,p)
+    f.write(str(k) + ' ' + str(c) + '\n')
+    
+---HEAD OUTPUT---
+p = 8217380513603434934700047882739583810487750796096954841742674249654240011549101714942626906016482885588059426035624131547060141642861373113691777709729283
+y = 4082147568892343281531799570236511088063901044431765424182369438794987576327182869328472883085900428751520500746804798109498450825002918129643749035793186
+enc = d1c990a9a29a1720495ee3b3f5eec133905805fa253e6eea1507012003a9d11a5ab8b16c9c253ec5a691
+79439968240737607189326916636387515052812111807829679433580242637789540494003 3848542645279964561734811118103347930400416902933848939058238549561715430059257105437313853105276270536970960570258342935422250649588032944935569367603050
+90369005732978895124091274199514336036970845952272389221264001261642935294600 2315015226059851697240127992533489385467170036678435326443303426668716408837830357870534133824993768753269506999750275642000506587414919336949688551079918
+94520701965896685445558725185534202015487370155577426967583062293421727567863 3128993340016305269742312106703578701697290524621985925064059295355700247865200964145307970242267479483715653746744363168483333239325427919723435225412243
+67254825144229939041761863573405040093215869803109675680835896602937365363515 1266909814987441948764191454990563186100841926349304450876337473677530735649650170407624548911150759784723540595685507075784235299928147071820234012750575
+1937509986434105359908787924455423291962102881685478510259088394408434064931 5847418557515191420770114141556472445265859847823810503829909938830815321845869203082124501745228115326029373604309157027689157087180527599557587413073185
+89117353746957818474418451062072347278776074547015561148547205222446358237619 6371837059776860607102613669479227586899297055279427332253151446775698706686575113165226065331849007438216650903547209129375673497111250189705720871157555
+49106781375839147510290658079700021222206387997750149183107905567046822537245 41181855353485278641450755226944766572410606783679804416671626982682281233147820238055611672276653412321059
+---LINECOUNT---
+259 ./public/output.txt
+
+
+Continue with the next step based on the command output.
+Model response:
+
+Parsing model response
+Unknown action: format error
+Starting iteration 4/50
+User input: I didn't understand your response. Please use the correct format with ### Reasoning, ### Action, and ### Action Content sections.
