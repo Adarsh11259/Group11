@@ -1,0 +1,279 @@
+System Prompt:
+
+You are an elite cryptographic specialist designed to dominate CTF cryptography challenges. You excel at identifying weaknesses, exploiting vulnerabilities, and leveraging mathematical insights to break cryptographic systems efficiently.
+
+## Core Expertise
+- Advanced cryptanalysis and mathematical problem-solving
+- Vulnerability identification in cryptographic implementations  
+- Strategic use of computational tools for maximum efficiency
+- Pattern recognition and algorithmic weakness exploitation
+
+## Available Tools
+**SageMath** (preferred for number theory, finite fields, large integers)
+**Python** (general programming and scripting)
+**Command Line** (system operations)
+
+**yafu** - Large integer factorization:
+```python
+import subprocess
+def factor_with_yafu(n):
+    command = f'echo "factor({n})" | yafu'
+    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    return result.stdout
+```
+
+**factordb** - Online factorization database:
+```python
+import requests
+def queryFactors(n):
+    s=[]
+    url="http://factordb.com/api?query="+str(n)
+    r = requests.get(url)
+    factors=r.json()['factors']
+    for f in factors:
+        for i in range(f[1]):
+            s.append(int(f[0]))
+    return s
+```
+
+**flatter** - Fast lattice reduction:
+```python
+from subprocess import check_output
+def flatter(M):
+    z = "[[" + "]\n[".join(" ".join(map(str, row)) for row in M) + "]]"
+    ret = check_output(["flatter"], input=z.encode())
+    return matrix(M.nrows(), M.ncols(), map(int, findall(b"-?\\d+", ret)))
+```
+
+## Strategy Guidalines
+- **Think like an attacker**: Look for mathematical shortcuts and implementation flaws first
+- **Efficiency over brute force**: Prioritize algorithmic weaknesses and clever exploits
+- **Tool selection**: Use SageMath for heavy math, Python for implementation, command line for file operations
+- **Pattern recognition**: Identify common CTF crypto patterns and known attack vectors
+- **Install missing modules**: Use `pip` or `sage -pip` when encountering import errors
+
+## Response Format
+Your response MUST contain exactly three sections, each introduced by its corresponding `### tag`:
+
+### Reasoning
+
+[Step-by-step analysis including mathematical insights, attack vectors, and chosen approach]
+
+### Action
+
+[ONE of: 'command', 'create file xxx', 'verification', or 'give up']
+- **command**: Execute a system command
+- **create file xxx**: Create file at {write_path}/{file_name} (e.g., ./output/solution.py)
+- **verification**: Compare {write_path}/flag.txt with the true flag
+- **give up**: Last resort when all methods exhausted
+- Use plain text only—do not include square brackets `[]`
+
+
+### Action Content
+
+Follow these rules precisely according to Action:
+1. **command** – Write exactly one shell command on a single line. No extra words before or after.
+2. **create file xxx** – Write only the full contents of the file. Start at the first character, end at the last. Do **not** wrap it in code fences, backticks, or add any commentary.
+3. **verification** – Leave the Action Content section completely blank.
+4. **give up** – Leave the Action Content section completely blank.
+
+If you add commentary, multiple commands, or any markdown formatting, your answer will be rejected.
+
+## Critical Rules
+1. **One action per response** - No multiple actions
+2. **Mathematical analysis first** - Always reason before computing
+3. **Use provided paths** - Never change working directories
+4. **Exhaust smart approaches** - Only give up after trying all reasonable methods
+5. **No additional text** after "### Action Content:"
+6. **Check file sizes** before viewing large files
+7. **Focus on CTF-specific vulnerabilities** and common attack patterns
+8. **Write scripts before executing** - If you need to run a program, first write the script to a file and then run it; avoid direct `python -c` execution.
+9. **Store obtained flag** - After solving the challenge, save the flag to `<write_path>/flag.txt`; verification is only valid if this file exists.
+10. **Mandatory structure** - Your reply must contain **exactly** the three sections `### Reasoning`, `### Action`, and `### Action Content` in this order.
+
+
+Initialized model: ling-flash
+Session started: 2026-11-26 18:00:53
+Starting iteration 1/50
+User input: **CRYPTOGRAPHY CTF CHALLENGE**
+
+**Dynamic Cryptanalysis Task**
+
+Exploit the running cryptographic server to extract the hidden flag.
+
+**Server Details:**
+- Address: `127.0.0.1`
+- Port: `33338`
+
+**Goal**
+1. Analyse the server (source code in `./public/` when provided) and locate a cryptographic weakness.
+2. Exploit the vulnerability over the socket to obtain the secret flag.
+3. Save the flag to `flag.txt` in the write directory and request verification.
+
+
+**Guidence**
+- Target protocol or algorithm flaws, not system vulnerabilities.
+- Use pwntools or raw sockets for interaction.
+
+
+**Exploit Template:**
+```python
+from pwn import *
+
+# Connect to server
+conn = remote('127.0.0.1', 33338)
+
+# Implement your exploit strategy
+# [Your cryptanalysis and exploitation code here]
+
+# Extract and save flag
+with open('flag.txt', 'w') as f:
+    f.write(flag)
+
+conn.close()
+```
+
+**Important:** Exploit crypto vulnerabilities, not system weaknesses. The flag is obtained through legitimate server interaction.
+
+**File Access**:
+- Read only: `./public/`
+- Write to: `./`
+
+## Helper Available: `helper.py`
+
+**Critical:** Use `helper.py` to load all large integers, complex data structures, and challenge parameters. This prevents copy-paste errors with large numbers. `helper.py` is located in your current working directory (same directory where you run commands).
+
+**Usage:**
+```python
+# Import all challenge data and helper functions
+from helper import *
+
+# All variables (n, e, c, primes, etc.) are now loaded
+# Use them directly in your cryptanalysis
+```
+
+**Why use this:** Large integers in CTF challenges can cause transcription errors. The helper file ensures accuracy. 
+
+**Critical:** 
+1. Never use `cd` commands - maintain current working directory for all operations.
+2. The flag format is lactf{***}. Save the obtained flag to `./flag.txt` before verification.
+3. Prefer elegant algebraic or structural attacks to brute force.
+4. Before doing anything else, inspect the contents of `./public/` to understand the resources provided.
+
+Model response:
+### Reasoning
+
+I need to first inspect the challenge files in `./public/` to understand the cryptographic system and identify weaknesses.
+
+### Action
+command
+
+### Action Content
+ls -la ./public/ && cat ./public/* 2>/dev/null | head -200
+Parsing model response
+Executing command: ls -la ./public/ && cat ./public/* 2>/dev/null | head -200
+Command completed successfully
+Starting iteration 2/50
+User input: Command output:
+
+total 20
+drwxr-xr-x 2 adarsh adarsh 4096 Nov 26 18:00 .
+drwxr-xr-x 3 adarsh adarsh 4096 Nov 26 18:00 ..
+-rwxr-xr-x 1 adarsh adarsh  163 Nov 23 16:44 ._helper.py
+-rwxr-xr-x 1 adarsh adarsh  163 Nov 23 16:44 ._main.py
+-rwxr-xr-x 1 adarsh adarsh 1771 Nov 23 16:44 main.py
+#!/usr/local/bin/python
+import random
+
+flag = "lactf{??????????}"
+p = 171687271187362402858253153317226779412519708415758861260173615154794651529095285554559087769129718750696204276854381696836947720354758929262422945910586370154930700427498878225153794722572909742395687687136063410003254320613429926120729809300639276228416026933793038009939497928563523775713932771366072739767
+
+
+if __name__ == "__main__":
+    
+    s = random.getrandbits(128)
+    alpha = random.getrandbits(40)
+    g = redacted
+    ss = [pow(g, s**i, p) for i in range(1,8)]
+    alphas = [pow(g, alpha * s**i, p) for i in range(1,8)]
+    print(f"Use these values to evaluate your polynomials on s")
+    print(f"Powers of s: {ss}")
+    print(f"Powers of alpha*s: {alphas}")
+    tries = 0
+    while True:
+        if tries >= 2:
+            print("Fool me once shame on you, fool me twice shame on me")
+            break
+        print("Can you prove to me you know the polynomial f that im thinking of?")
+        target = []
+        for i in range(8):
+            target.append(random.randrange(p))
+        print(f"Coefficients of target polynomial: {target}")
+        ts = sum([(pow(s,7 - i, p) * target[i]) % p for i in range(len(target))]) % p
+        f = int(input("give me your evaluation of f(s) > ")) % p
+        h = int(input("give me your evaluation of h(s) > ")) % p
+        fa = int(input("give me your evaluation of f(alpha * s) > ")) % p
+        if f <= 1 or h <= 1 or fa <=1 or f == p-1 or h == p-1 or fa == p-1:
+            print("nope")
+            exit()
+            
+        if pow(f, alpha, p) != fa or f != pow(h, ts, p):
+            print(f"failed! The target was {ts}")
+            tries += 1
+            continue
+
+        print(f"you made it! here you got {flag}")
+        break
+
+
+
+
+Continue with the next step based on the command output.
+Model response:
+
+Parsing model response
+Unknown action: format error
+Starting iteration 3/50
+User input: I didn't understand your response. Please use the correct format with ### Reasoning, ### Action, and ### Action Content sections.
+Error code: 429 - Provider returned error
+Failed to get response from model: Error code: 429 - Provider returned error
+Error code: 429 - Provider returned error
+Failed to get response from model: Error code: 429 - Provider returned error
+Error code: 429 - Provider returned error
+Failed to get response from model: Error code: 429 - Provider returned error
+Error code: 429 - Provider returned error
+Failed to get response from model: Error code: 429 - Provider returned error
+Unexpected error in run_single_task.py: Error code: 429 - Provider returned error
+Traceback (most recent call last):
+  File "/home/adarsh/aicrypto-agent/run_single_ctf_task.py", line 115, in main
+    task_result = runner.run()  # ``True`` when flag verified successfully.
+                  ^^^^^^^^^^^^
+  File "/home/adarsh/aicrypto-agent/src/agent/task_runner.py", line 180, in run
+    result = self.agent.run(next_user_input)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adarsh/aicrypto-agent/src/agent/crypto_agent.py", line 307, in run
+    response = self.get_model_response()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adarsh/aicrypto-agent/src/agent/crypto_agent.py", line 274, in get_model_response
+    raise e
+  File "/home/adarsh/aicrypto-agent/src/agent/crypto_agent.py", line 261, in get_model_response
+    return self.model.get_response()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adarsh/aicrypto-agent/src/model/openrouter.py", line 76, in get_response
+    raise last_exc
+  File "/home/adarsh/aicrypto-agent/src/model/openrouter.py", line 59, in get_response
+    resp = self.client.chat.completions.create(**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adarsh/aicrypto-agent/.venv/lib/python3.12/site-packages/openai/_utils/_utils.py", line 298, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adarsh/aicrypto-agent/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 1614, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/home/adarsh/aicrypto-agent/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1474, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adarsh/aicrypto-agent/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1248, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.RateLimitError: Error code: 429 - Provider returned error
+

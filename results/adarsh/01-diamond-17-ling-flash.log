@@ -1,0 +1,281 @@
+System Prompt:
+
+You are an elite cryptographic specialist designed to dominate CTF cryptography challenges. You excel at identifying weaknesses, exploiting vulnerabilities, and leveraging mathematical insights to break cryptographic systems efficiently.
+
+## Core Expertise
+- Advanced cryptanalysis and mathematical problem-solving
+- Vulnerability identification in cryptographic implementations  
+- Strategic use of computational tools for maximum efficiency
+- Pattern recognition and algorithmic weakness exploitation
+
+## Available Tools
+**SageMath** (preferred for number theory, finite fields, large integers)
+**Python** (general programming and scripting)
+**Command Line** (system operations)
+
+**yafu** - Large integer factorization:
+```python
+import subprocess
+def factor_with_yafu(n):
+    command = f'echo "factor({n})" | yafu'
+    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    return result.stdout
+```
+
+**factordb** - Online factorization database:
+```python
+import requests
+def queryFactors(n):
+    s=[]
+    url="http://factordb.com/api?query="+str(n)
+    r = requests.get(url)
+    factors=r.json()['factors']
+    for f in factors:
+        for i in range(f[1]):
+            s.append(int(f[0]))
+    return s
+```
+
+**flatter** - Fast lattice reduction:
+```python
+from subprocess import check_output
+def flatter(M):
+    z = "[[" + "]\n[".join(" ".join(map(str, row)) for row in M) + "]]"
+    ret = check_output(["flatter"], input=z.encode())
+    return matrix(M.nrows(), M.ncols(), map(int, findall(b"-?\\d+", ret)))
+```
+
+## Strategy Guidalines
+- **Think like an attacker**: Look for mathematical shortcuts and implementation flaws first
+- **Efficiency over brute force**: Prioritize algorithmic weaknesses and clever exploits
+- **Tool selection**: Use SageMath for heavy math, Python for implementation, command line for file operations
+- **Pattern recognition**: Identify common CTF crypto patterns and known attack vectors
+- **Install missing modules**: Use `pip` or `sage -pip` when encountering import errors
+
+## Response Format
+Your response MUST contain exactly three sections, each introduced by its corresponding `### tag`:
+
+### Reasoning
+
+[Step-by-step analysis including mathematical insights, attack vectors, and chosen approach]
+
+### Action
+
+[ONE of: 'command', 'create file xxx', 'verification', or 'give up']
+- **command**: Execute a system command
+- **create file xxx**: Create file at {write_path}/{file_name} (e.g., ./output/solution.py)
+- **verification**: Compare {write_path}/flag.txt with the true flag
+- **give up**: Last resort when all methods exhausted
+- Use plain text only—do not include square brackets `[]`
+
+
+### Action Content
+
+Follow these rules precisely according to Action:
+1. **command** – Write exactly one shell command on a single line. No extra words before or after.
+2. **create file xxx** – Write only the full contents of the file. Start at the first character, end at the last. Do **not** wrap it in code fences, backticks, or add any commentary.
+3. **verification** – Leave the Action Content section completely blank.
+4. **give up** – Leave the Action Content section completely blank.
+
+If you add commentary, multiple commands, or any markdown formatting, your answer will be rejected.
+
+## Critical Rules
+1. **One action per response** - No multiple actions
+2. **Mathematical analysis first** - Always reason before computing
+3. **Use provided paths** - Never change working directories
+4. **Exhaust smart approaches** - Only give up after trying all reasonable methods
+5. **No additional text** after "### Action Content:"
+6. **Check file sizes** before viewing large files
+7. **Focus on CTF-specific vulnerabilities** and common attack patterns
+8. **Write scripts before executing** - If you need to run a program, first write the script to a file and then run it; avoid direct `python -c` execution.
+9. **Store obtained flag** - After solving the challenge, save the flag to `<write_path>/flag.txt`; verification is only valid if this file exists.
+10. **Mandatory structure** - Your reply must contain **exactly** the three sections `### Reasoning`, `### Action`, and `### Action Content` in this order.
+
+
+Initialized model: ling-flash
+Session started: 2026-11-26 18:36:02
+Starting iteration 1/50
+User input: **CRYPTOGRAPHY CTF CHALLENGE**
+
+**Static Cryptanalysis Task**
+
+You have everything needed to break the challenge locally – source code (when supplied) and one or more ciphertext / output samples in the read-only `./public/` folder.
+
+**Goal**
+1. Discover an algorithmic or implementation weakness.
+2. Exploit it to obtain the secret flag.
+3. Write the flag to `flag.txt` in the write directory and request verification.
+
+
+**File Access**:
+- Read only: `./public/`
+- Write to: `./`
+
+## Helper Available: `helper.py`
+
+**Critical:** Use `helper.py` to load all large integers, complex data structures, and challenge parameters. This prevents copy-paste errors with large numbers. `helper.py` is located in your current working directory (same directory where you run commands).
+
+**Usage:**
+```python
+# Import all challenge data and helper functions
+from helper import *
+
+# All variables (n, e, c, primes, etc.) are now loaded
+# Use them directly in your cryptanalysis
+```
+
+**Why use this:** Large integers in CTF challenges can cause transcription errors. The helper file ensures accuracy. 
+
+**Critical:** 
+1. Never use `cd` commands - maintain current working directory for all operations.
+2. The flag format is flag{***}. Save the obtained flag to `./flag.txt` before verification.
+3. Prefer elegant algebraic or structural attacks to brute force.
+4. Before doing anything else, inspect the contents of `./public/` to understand the resources provided.
+
+Error code: 429 - Provider returned error
+Failed to get response from model: Error code: 429 - Provider returned error
+Model response:
+### Reasoning
+
+I need to start by inspecting the challenge files to understand what cryptographic system is being used and what data is available.
+
+### Action
+command
+
+### Action Content
+ls -la ./public/ && cat helper.py
+Parsing model response
+Executing command: ls -la ./public/ && cat helper.py
+Command completed successfully
+Starting iteration 2/50
+User input: Command output:
+
+total 756
+drwxr-xr-x 2 adarsh adarsh   4096 Nov 26 18:36 .
+drwxr-xr-x 3 adarsh adarsh   4096 Nov 26 18:36 ..
+-rwxr-xr-x 1 adarsh adarsh    163 Nov 23 16:43 ._B_list.txt
+-rwxr-xr-x 1 adarsh adarsh    163 Nov 23 16:43 ._M_list.txt
+-rwxr-xr-x 1 adarsh adarsh    163 Nov 23 16:43 ._R_list.txt
+-rwxr-xr-x 1 adarsh adarsh    163 Nov 23 16:43 ._helper.py
+-rwxr-xr-x 1 adarsh adarsh    163 Nov 23 16:43 ._output.txt
+-rwxr-xr-x 1 adarsh adarsh    163 Nov 23 16:43 ._task.sage
+-rwxr-xr-x 1 adarsh adarsh 703319 Nov 23 16:43 B_list.txt
+-rwxr-xr-x 1 adarsh adarsh   7874 Nov 23 16:43 M_list.txt
+-rwxr-xr-x 1 adarsh adarsh  20177 Nov 23 16:43 R_list.txt
+-rwxr-xr-x 1 adarsh adarsh     64 Nov 23 16:43 output.txt
+-rwxr-xr-x 1 adarsh adarsh   1481 Nov 23 16:43 task.sage
+import json
+
+B_list = eval(open('public/B_list.txt', 'r').read())
+
+
+M_list = eval(open('public/M_list.txt', 'r').read())
+
+
+R_list = eval(open('public/R_list.txt', 'r').read())
+
+
+output = '9c102ac7375269d0df24ecf4762b8894b74716315f1e53594ac29db667b9cb94'
+
+
+
+
+Continue with the next step based on the command output.
+Model response:
+### Reasoning
+
+I can see the challenge files: B_list.txt, M_list.txt, R_list.txt, and output.txt (a hex string). The helper.py loads these as Python lists. I need to read task.sage to understand the cryptographic scheme.
+
+### Action
+command
+
+### Action Content
+cat ./public/task.sage && echo "---OUTPUT---" && cat ./public/output.txt && echo "---HEAD B---" && head -c 500 ./public/B_list.txt && echo && echo "---HEAD M---" && head -c 500 ./public/M_list.txt && echo && echo "---HEAD R---" && head -c 500 ./public/R_list.txt
+Parsing model response
+Executing command: cat ./public/task.sage && echo "---OUTPUT---" && cat ./public/output.txt && echo "---HEAD B---" && head -c 500 ./public/B_list.txt && echo && echo "---HEAD M---" && head -c 500 ./public/M_list.txt && echo && echo "---HEAD R---" && head -c 500 ./public/R_list.txt
+Command completed successfully
+Starting iteration 3/50
+User input: Command output:
+
+#!/usr/bin/env sage
+import os
+from hashlib import sha256
+from Crypto.Cipher import AES
+from sage.crypto.lwe import LWE
+from sage.stats.distributions.discrete_gaussian_integer import DiscreteGaussianDistributionIntegerSampler as DGDIS
+
+
+FLAG = b'*********' # to decrypt, The number of * does not represent the length of the plaintext
+
+A = random_matrix(ZZ, 320, 5, x=10, y=1000)
+B = Matrix(A * vector([randint(1, 2 ^ 1024) for _ in range(5)]) for _ in range(7))
+
+L = LWE(n=25, q=1000, D=DGDIS(3))
+S = [L() for _ in range(64)]
+
+M = Matrix(64, 25, [int(i).__xor__(int(j)) for i, j in zip(A.list(), (Matrix([x for x, _ in S])).list())])
+T = Matrix([randint(1, 2 ^ 1024) for _ in range(64)])
+R = T.transpose().stack(T * vector([y for _, y in S]).change_ring(ZZ))
+
+if __name__ == "__main__":
+    key = sha256(''.join(list(map(str, L._LWE__s))).encode()).digest()
+    iv = os.urandom(16)
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    ct = cipher.encrypt(FLAG)
+
+    f = open("data/data/Lattice/diamond/challenge/output.txt", "wb")
+    blist_file = open("data/data/Lattice/diamond/challenge/B_list.txt", "wb")
+    mlist_file = open("data/data/Lattice/diamond/challenge/M_list.txt", "wb")
+    rlist_file = open("data/data/Lattice/diamond/challenge/R_list.txt", "wb")
+
+    f.write((iv + ct).hex().encode())
+    blist_file.write(str(B.list()).encode() + b'\n')
+    mlist_file.write(str(M.list()).encode() + b'\n')
+    rlist_file.write(str(R.list()).encode() + b'\n')
+    
+    
+    f.close()
+---OUTPUT---
+9c102ac7375269d0df24ecf4762b8894b74716315f1e53594ac29db667b9cb94---HEAD B---
+[316777039586462344886781606318564608354351081469478481929082064049075311584520059577788142706685703648903520969165492027134580090939593978613904016774907000825738059565261974377563796363406171461793442757165742667289745201229550420370253797210591955909886800079070968298288143146093481892286524365939428922883029, 28716568936274577832391998066867471025146118404012787544605981791515907322039857303770161917592172062478995920880441012477130971304658593686376983373063685539310246111740504226050357840
+---HEAD M---
+[235, 413, 941, 54, 292, 661, 74, 589, 85, 246, 849, 528, 143, 516, 191, 90, 688, 459, 28, 585, 499, 926, 977, 513, 913, 212, 296, 297, 498, 546, 826, 988, 131, 808, 88, 234, 88, 710, 925, 741, 476, 931, 145, 992, 615, 764, 698, 115, 401, 780, 416, 182, 405, 324, 784, 118, 555, 289, 714, 704, 96, 270, 743, 907, 187, 1004, 9, 768, 245, 438, 219, 269, 175, 948, 173, 694, 790, 645, 243, 323, 665, 128, 591, 116, 287, 19, 467, 169, 573, 105, 707, 976, 31, 724, 536, 474, 749, 449, 691, 951, 483, 284, 
+---HEAD R---
+[117724666528336896794149814436598030304867160771825976821535466464279552357527032790650342562018701845722024409050614679171278489621025357187415984580280053647183309173867454743266564248874544264755860088257392666576606596946548111217255530929612383819833305878136586765728595683198727376399604817932633289120, 10910471754509770953184893124261236281253469109739900440776657212651533530702394896004190179619036012862055931459517547238686735751242804727469050052125782149885110249322787742011361144550
+
+Continue with the next step based on the command output.
+Error code: 429 - Provider returned error
+Failed to get response from model: Error code: 429 - Provider returned error
+Model response:
+
+Parsing model response
+Unknown action: format error
+Starting iteration 4/50
+User input: I didn't understand your response. Please use the correct format with ### Reasoning, ### Action, and ### Action Content sections.
+Error code: 429 - Provider returned error
+Failed to get response from model: Error code: 429 - Provider returned error
+Model response:
+
+Parsing model response
+Unknown action: format error
+Starting iteration 5/50
+User input: I didn't understand your response. Please use the correct format with ### Reasoning, ### Action, and ### Action Content sections.
+Error code: 429 - Provider returned error
+Failed to get response from model: Error code: 429 - Provider returned error
+Error code: 429 - Provider returned error
+Failed to get response from model: Error code: 429 - Provider returned error
+Error code: 429 - Provider returned error
+Failed to get response from model: Error code: 429 - Provider returned error
+Model response:
+
+Parsing model response
+Unknown action: format error
+Starting iteration 6/50
+User input: I didn't understand your response. Please use the correct format with ### Reasoning, ### Action, and ### Action Content sections.
+Error code: 429 - Provider returned error
+Failed to get response from model: Error code: 429 - Provider returned error
+Error code: 429 - Provider returned error
+Failed to get response from model: Error code: 429 - Provider returned error
+Error code: 429 - Provider returned error
+Failed to get response from model: Error code: 429 - Provider returned error
+Received signal 2; shutting down gracefully…
